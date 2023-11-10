@@ -15,9 +15,6 @@ stages:
 
 variables:
   HOME: /tmp
-  LD_PRELOAD: /usr/local/lib/libnss_wrapper.so
-  NSS_WRAPPER_PASSWD: /tmp/passwd
-  NSS_WRAPPER_GROUP: /tmp/group
   TF_IN_AUTOMATION: "true"
   TF_PLUGIN_CACHE_DIR: $CI_PROJECT_DIR/.terraform.d/plugin-cache
 
@@ -37,8 +34,6 @@ cache:
   before_script:
     - mv .ssh ~/
     - mkdir -p $TF_PLUGIN_CACHE_DIR
-    - echo "terraform:x:$(id -u):$(id -g):Terraform:$HOME:/bin/false" > "$NSS_WRAPPER_PASSWD"
-    - echo "terraform:x:$(id -g):" > "$NSS_WRAPPER_GROUP"
     - cd "$TF_ROOT"
   after_script:
     - rm -r .terraform.d

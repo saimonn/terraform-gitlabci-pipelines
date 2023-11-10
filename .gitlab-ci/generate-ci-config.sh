@@ -1,17 +1,17 @@
 #!/bin/sh
 
-cat << 'EOT'
+cat << EOT
 workflow:
   rules:
-    - if: $CI_MERGE_REQUEST_IID
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $PARENT_PIPELINE_SOURCE == "schedule"
+    - if: \$CI_MERGE_REQUEST_IID
+    - if: \$CI_COMMIT_BRANCH == \$CI_DEFAULT_BRANCH
+    - if: \$PARENT_PIPELINE_SOURCE == "schedule"
 
 variables:
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
   ROOT_PIPELINE_SOURCE: $ROOT_PIPELINE_SOURCE
-  TF_IMAGE_REPOSITORY: ghcr.io/camptocamp/terraform
-  TF_IMAGE_TAG: 1.0.6
+  TF_IMAGE_REPOSITORY: "${TF_IMAGE_REPOSITORY:$DEFAULT_TF_IMAGE_REPOSITORY}"
+  TF_IMAGE_TAG: "${TF_IMAGE_TAG:$DEFAULT_TF_IMAGE_TAG}"
 
 .init-gpg: &init-gpg |
   uid=$(bash -c 'gpg --with-colons --import-options import-show --import --quiet <(echo "$GPG_SECRET_KEY")'|grep ^uid:|sed -n 's/.*<\(.*\)>.*/\1/p')
@@ -26,8 +26,8 @@ variables:
 
 .init-ssh: &init-ssh |
   mkdir -p ~/.ssh
-  gopass $SSH_KEY_SECRET_PATH id_rsa > ~/.ssh/id_rsa
-  gopass $SSH_KEY_SECRET_PATH id_rsa.pub > ~/.ssh/id_rsa.pub
+  gopass \$SSH_KEY_SECRET_PATH id_rsa > ~/.ssh/id_rsa
+  gopass \$SSH_KEY_SECRET_PATH id_rsa.pub > ~/.ssh/id_rsa.pub
   chmod 0600 ~/.ssh/id_rsa
   ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
   cp -a ~/.ssh .
@@ -37,7 +37,6 @@ setup-gopass:
   image:
     name: camptocamp/summon-gopass
   script:
-    - echo "tf repo is '$TF_IMAGE_REPOSITORY:$TF_IMAGE_TAG'"
     - *init-gpg
     - *init-gopass
     - *init-ssh
@@ -63,6 +62,8 @@ $workspace:
   trigger:
     include:
       - https://raw.githubusercontent.com/saimonn/terraform-gitlabci-pipelines/fwd_pipeline_var/.gitlab-ci/terraform-pipeline.yaml
+    forward:
+      pipeline_variables: true
     strategy: depend
 EOT
 if [ "$PARENT_PIPELINE_SOURCE" != "schedule" ]; then

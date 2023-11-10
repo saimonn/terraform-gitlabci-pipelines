@@ -8,13 +8,14 @@ workflow:
 variables:
   PARENT_PIPELINE_SOURCE: $CI_PIPELINE_SOURCE
   ROOT_PIPELINE_SOURCE: $CI_PIPELINE_SOURCE
+  DEFAULT_TF_IMAGE_REPOSITORY: camptocamp/terraform
+  DEFAULT_TF_IMAGE_TAG: 0.13.6
 
 generate-config:
   image:
     name: curlimages/curl:7.74.0
   stage: build
   script:
-    - echo "tf repo is '$TF_IMAGE_REPOSITORY:$TF_IMAGE_TAG'"
     - curl https://raw.githubusercontent.com/saimonn/terraform-gitlabci-pipelines/fwd_pipeline_var/.gitlab-ci/generate-ci-config.sh | sh > generated-ci-config.yml
   artifacts:
     paths:
@@ -26,4 +27,6 @@ child-pipeline:
     include:
       - artifact: generated-ci-config.yml
         job: generate-config
+    forward:
+      pipeline_variables: true
     strategy: depend
