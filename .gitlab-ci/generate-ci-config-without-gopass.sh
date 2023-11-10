@@ -44,6 +44,8 @@ $workspace:
   trigger:
     include:
       - https://raw.githubusercontent.com/camptocamp/terraform-gitlabci-pipelines/master/.gitlab-ci/terraform-pipeline-without-gopass.yaml
+    forward:
+      pipeline_variables: true
     strategy: depend
 EOT
 if [ "$PARENT_PIPELINE_SOURCE" != "schedule" ]; then

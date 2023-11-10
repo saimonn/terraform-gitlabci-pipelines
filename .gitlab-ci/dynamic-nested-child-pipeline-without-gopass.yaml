@@ -25,4 +25,6 @@ child-pipeline:
     include:
       - artifact: generated-ci-config.yml
         job: generate-config
+    forward:
+      pipeline_variables: true
     strategy: depend
