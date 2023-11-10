@@ -37,6 +37,7 @@ setup-gopass:
   image:
     name: camptocamp/summon-gopass
   script:
+    - echo "tf repo is '$TF_IMAGE_REPOSITORY:$TF_IMAGE_TAG'"
     - *init-gpg
     - *init-gopass
     - *init-ssh

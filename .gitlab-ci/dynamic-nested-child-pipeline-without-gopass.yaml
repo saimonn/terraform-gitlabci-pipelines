@@ -14,6 +14,7 @@ generate-config:
     name: curlimages/curl:7.74.0
   stage: build
   script:
+    - echo "tf repo is '$TF_IMAGE_REPOSITORY:$TF_IMAGE_TAG'"
     - curl https://raw.githubusercontent.com/saimonn/terraform-gitlabci-pipelines/fwd_pipeline_var/.gitlab-ci/generate-ci-config-without-gopass.sh | sh > generated-ci-config.yml
   artifacts:
     paths:
