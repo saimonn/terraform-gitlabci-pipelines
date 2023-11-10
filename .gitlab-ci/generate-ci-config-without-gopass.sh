@@ -43,7 +43,7 @@ $workspace:
     TF_ROOT: "$tf_root"
   trigger:
     include:
-      - https://raw.githubusercontent.com/camptocamp/terraform-gitlabci-pipelines/master/.gitlab-ci/terraform-pipeline-without-gopass.yaml
+      - https://raw.githubusercontent.com/saimonn/terraform-gitlabci-pipelines/fwd_pipeline_var/.gitlab-ci/terraform-pipeline-without-gopass.yaml
     forward:
       pipeline_variables: true
     strategy: depend
