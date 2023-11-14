@@ -17,6 +17,7 @@ generate-config:
   stage: build
   script:
     - curl https://raw.githubusercontent.com/saimonn/terraform-gitlabci-pipelines/fwd_pipeline_var/.gitlab-ci/generate-ci-config-without-gopass.sh | sh > generated-ci-config.yml
+    - cat generated-ci-config.yml
   artifacts:
     paths:
       - generated-ci-config.yml
